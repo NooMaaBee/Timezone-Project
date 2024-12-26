@@ -33,7 +33,8 @@ function updateCity(event) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const cityTimeZone = moment.tz.guess({ latitude, longitude });
+        const cityTimeZone = moment.tz.guess();
+        const cityName = cityTimeZone.replace("_", " ").split("/").pop();
         displayCityTime(cityTimeZone, "My current location");
       },
       () => {
