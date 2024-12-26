@@ -28,10 +28,14 @@ function updateTime() {
 function updateCity(event) {
   let cityTimeZone = event.target.value;
   if (!cityTimeZone) return;
+
   if (cityTimeZone === "current") {
     city = moment.tz.guess();
   }
-  let cityName = cityTimeZone.replace("_", " ").split("/")[1];
+  let cityName =
+    cityTimeZone === moment.tz.guess()
+      ? "Current Location"
+      : cityTimeZone.replace("_", " ").split("/")[1];
   let cityTime = moment().tz(cityTimeZone);
   let citiesElement = document.querySelector("#cities");
   citiesElement.innerHTML = `<div class="city">
@@ -51,3 +55,22 @@ setInterval(updateTime, 1000);
 
 let citiesSelectElement = document.querySelector("#city");
 citiesSelectElement.addEventListener("change", updateCity);
+
+function initCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const currentZone = moment.tz.guess();
+        updateCity({ target: { value: currentZone } });
+      },
+      () => {
+        alert("Unable to retrive your location. Please allow location access");
+      }
+    );
+  } else {
+    alert("Geolocation is not supported by your browser.");
+  }
+}
+if (document.querySelector("city").value === "current") {
+  initCurrentLocation();
+}
