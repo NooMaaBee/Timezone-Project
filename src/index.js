@@ -63,6 +63,22 @@ function displayCityTime(cityTimeZone, cityName) {
           </div>`;
 }
 
+function askForLocation() {
+  let userCity = prompt("What is your current location?");
+  if (userCity) {
+    const cityTimeZone = moment.tz
+      .names()
+      .find((zone) => zone.toLowerCase().includes(userCity.toLowerCase()));
+    if (cityTimeZone) {
+      updateCity(cityTimeZone);
+    }
+  } else {
+    alert(
+      "Unable to find the timezone for the entered city. Please check the city name and try again."
+    );
+  }
+}
+
 updateTime();
 
 setInterval(updateTime, 1000);
