@@ -10,9 +10,10 @@
   </head>
   <body>
     <div class="container">
-      <h1>World clock</h1>
+      <h1>World Clock</h1>
+
       <main>
-        <select id="city">
+        <select id="city" class="select-city">
           <option value="">Select a city</option>
           <option value="current">My current location</option>
           <option value="America/New_York">New York</option>
@@ -29,25 +30,31 @@
             </div>
             <div class="time"></div>
           </div>
-
-          <div class="city last-city" id="paris">
+          <div class="city" id="paris">
             <div>
               <h2>Paris</h2>
               <div class="date"></div>
             </div>
             <div class="time"></div>
           </div>
+          <div class="city" id="tokyo">
+            <div>
+              <h2>Tokyo</h2>
+              <div class="date"></div>
+            </div>
+            <div class="time"></div>
+          </div>
+          <div class="back-to-home" id="back-to-home" style="display: none">
+            <a href="index.html" id="return-link">Return</a>
+          </div>
         </div>
-        <button id="all-cities" class="all-cities">All cities</button>
       </main>
-
       <footer>
         This project was coded with ♡ by <strong>Nora M. Berg</strong> and is
         open sourced on
         <a href="https://github.com/NooMaaBee" target="_blank">Github</a>
       </footer>
     </div>
-
     <script src="src/index.js"></script>
   </body>
 </html>

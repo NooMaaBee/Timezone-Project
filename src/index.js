@@ -1,44 +1,44 @@
 function updateTime() {
-  //Los Angeles
-  let losAngelesElement = document.querySelector("#los-angeles");
-  if (losAngelesElement) {
-    let losAngelesDateElement = losAngelesElement.querySelector(".date");
-    let losAngelesTimeElement = losAngelesElement.querySelector(".time");
-    let losAngelesTime = moment().tz("America/Los_Angeles");
+  const cities = [
+    { id: "los-angeles", timezone: "America/Los_Angeles" },
+    { id: "paris", timezone: "Europe/Paris" },
+    { id: "tokyo", timezone: "Asia/Tokyo" },
+  ];
 
-    losAngelesDateElement.innerHTML = losAngelesTime.format("MMMM Do YYYY");
-    losAngelesTimeElement.innerHTML = losAngelesTime.format(
-      "h:mm:ss[<small>]A[</small>]"
-    );
-  }
+  cities.forEach((city) => {
+    let cityElement = document.querySelector(`#${city.id}`);
+    if (cityElement) {
+      let dateElement = cityElement.querySelector(".date");
+      let timeElement = cityElement.querySelector(".time");
+      let cityTime = moment().tz(city.timezone);
 
-  //Paris
-  let parisElement = document.querySelector("#paris");
-  if (parisElement) {
-    let parisDateElement = parisElement.querySelector(".date");
-    let parisTimeElement = parisElement.querySelector(".time");
-    let parisTime = moment().tz("Europe/Paris");
-
-    parisDateElement.innerHTML = parisTime.format("MMMM Do YYYY");
-    parisTimeElement.innerHTML = parisTime.format(
-      "h:mm:ss [<small>]A[</small>]"
-    );
-  }
+      dateElement.innerHTML = cityTime.format("MMMM Do YYYY");
+      timeElement.innerHTML = cityTime.format("h:mm:ss [<small>]A[</small>]");
+    }
+  });
 }
+
 function updateCity(event) {
   let cityTimeZone = event.target.value;
-  if (!cityTimeZone) return;
+  const backToHome = document.getElementById("back-to-home");
+
+  if (!cityTimeZone) {
+    backToHome.style.display = "none";
+    return;
+  }
 
   if (cityTimeZone === "current") {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
         const cityTimeZone = moment.tz.guess();
         const cityName = cityTimeZone.replace("_", " ").split("/").pop();
         displayCityTime(cityTimeZone, "My current location");
+        backToHome.style.display = "block";
       },
       () => {
-        alert("Unable to retrive your location. Please allow location access");
+        alert(
+          "Unable to retrieve your location. Please allow location access."
+        );
       }
     );
   } else {
@@ -46,6 +46,7 @@ function updateCity(event) {
       cityTimeZone,
       cityTimeZone.split("/").pop().replace("_", " ")
     );
+    backToHome.style.display = "block";
   }
 }
 
@@ -53,89 +54,35 @@ function displayCityTime(cityTimeZone, cityName) {
   let cityTime = moment.tz(cityTimeZone);
   let citiesElement = document.querySelector("#cities");
   citiesElement.innerHTML = `<div class="city">
-            <div>
-              <h2>${cityName}</h2>
-              <div class="date">${cityTime.format("MMMM Do YYYY")}</div>
-            </div>
-            <div class="time">${cityTime.format(
-              "h:mm:ss"
-            )}<small>${cityTime.format("A")}</small></div>
-          </div>`;
+    <div>
+      <h2>${cityName}</h2>
+      <div class="date">${cityTime.format("MMMM Do YYYY")}</div>
+    </div>
+    <div class="time">${cityTime.format("h:mm:ss")}<small>${cityTime.format(
+    "A"
+  )}</small></div>
+  </div>`;
 }
 
-function askForLocation() {
-  let userCity = prompt("What is your current location?");
-  if (userCity) {
-    const cityTimeZone = moment.tz
-      .names()
-      .find((zone) => zone.toLowerCase().includes(userCity.toLowerCase()));
-    if (cityTimeZone) {
-      updateCity(cityTimeZone);
-    }
-  } else {
-    alert(
-      "Unable to find the timezone for the entered city. Please check the city name and try again."
-    );
-  }
-}
-
-document.getElementById("city").addEventListener("change", (event)=>{
-    const button = getElementById("all-cities")
-    if (event.target.value){
-        button.style.display = "block";
-    } else {
-        button.style.display = "none"
-    }
-})
-document.getElementById("all-cities").addEventListener("click", () => {
-  const cities = [
-    { name: "Los Angeles", timezone: "America/Los Angeles" },
-    { name: "New York", timezone: "America/New York" },
-    { name: "Tokyo", timezone: "Asia/Tokyo" },
-    { name: "London", timezone: "Europe/London" },
-    { name: "Paris", timezone: "Europe/Paris" },
-    { name: "Istanbul", timezone: "Europe/Istanbul" },
-    { name: "Melbourne", timezone: "Australia/Melbourne" },
-  ];
-
-  let citiesElement = document.querySelector("#cities");
-  citiesElement.innerHTML = "";
-
-  cities.forEach((city) => {
-    let cityTime = moment.tz(city.TimeZone);
-    citiesElement.innerHTML += `<div class="city"> <div> <h2>${
-      city.name
-    }</h2> <div class="date">${cityTime.format(
-      "MMMM Do YYYY"
-    )}</div> </div> <div class="time">${cityTime.format(
-      "h:mm:ss"
-    )}<small>${cityTime.format("A")}</small></div> </div>`;
-  });
-});
-
-updateTime();
-
-setInterval(updateTime, 1000);
-
-let citiesSelectElement = document.querySelector("#city");
-citiesSelectElement.addEventListener("change", updateCity);
+document.getElementById("city").addEventListener("change", updateCity);
 
 function initCurrentLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
         const currentZone = moment.tz.guess();
         updateCity({ target: { value: currentZone } });
       },
       () => {
-        alert("Unable to retrive your location. Please allow location access");
+        alert(
+          "Unable to retrieve your location. Please allow location access."
+        );
       }
     );
   } else {
     alert("Geolocation is not supported by your browser.");
   }
 }
-if (document.querySelector("#city").value === "current") {
-  initCurrentLocation();
-}
+
+updateTime();
+setInterval(updateTime, 1000);
