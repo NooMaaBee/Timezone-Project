@@ -79,6 +79,40 @@ function askForLocation() {
   }
 }
 
+document.getElementById("city").addEventListener("change", (event)=>{
+    const button = getElementById("all-cities")
+    if (event.target.value){
+        button.style.display = "block";
+    } else {
+        button.style.display = "none"
+    }
+})
+document.getElementById("all-cities").addEventListener("click", () => {
+  const cities = [
+    { name: "Los Angeles", timezone: "America/Los Angeles" },
+    { name: "New York", timezone: "America/New York" },
+    { name: "Tokyo", timezone: "Asia/Tokyo" },
+    { name: "London", timezone: "Europe/London" },
+    { name: "Paris", timezone: "Europe/Paris" },
+    { name: "Istanbul", timezone: "Europe/Istanbul" },
+    { name: "Melbourne", timezone: "Australia/Melbourne" },
+  ];
+
+  let citiesElement = document.querySelector("#cities");
+  citiesElement.innerHTML = "";
+
+  cities.forEach((city) => {
+    let cityTime = moment.tz(city.TimeZone);
+    citiesElement.innerHTML += `<div class="city"> <div> <h2>${
+      city.name
+    }</h2> <div class="date">${cityTime.format(
+      "MMMM Do YYYY"
+    )}</div> </div> <div class="time">${cityTime.format(
+      "h:mm:ss"
+    )}<small>${cityTime.format("A")}</small></div> </div>`;
+  });
+});
+
 updateTime();
 
 setInterval(updateTime, 1000);
