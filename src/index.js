@@ -20,33 +20,8 @@ function updateTime() {
 
 function updateCity(event) {
   let cityTimeZone = event.target.value;
-  const backToHome = document.getElementById("back-to-home");
-
-  if (!cityTimeZone) {
-    backToHome.style.display = "none";
-    return;
-  }
-
   if (cityTimeZone === "current") {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const cityTimeZone = moment.tz.guess();
-        const cityName = cityTimeZone.replace("_", " ").split("/").pop();
-        displayCityTime(cityTimeZone, "My current location");
-        backToHome.style.display = "block";
-      },
-      () => {
-        alert(
-          "Unable to retrieve your location. Please allow location access."
-        );
-      }
-    );
-  } else {
-    displayCityTime(
-      cityTimeZone,
-      cityTimeZone.split("/").pop().replace("_", " ")
-    );
-    backToHome.style.display = "block";
+    cityTimeZone = moment.tz.guess();
   }
 }
 
