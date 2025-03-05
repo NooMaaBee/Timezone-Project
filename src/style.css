@@ -45,6 +45,9 @@ select {
   border-radius: 4px;
   padding: 10px;
 }
+#user-time {
+  display: none;
+}
 .city {
   display: flex;
   justify-content: space-between;
