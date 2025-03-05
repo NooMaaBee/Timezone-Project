@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
       )
       .join("");
     updateAllCitiesTime();
+    document.getElementById("back-to-home").style.display = "none"; // Skjul knappen når hovedsiden vises
   }
 
   function updateCity(event) {
@@ -61,17 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="time">${cityTime.format(
               "h:mm:ss"
             )}<small>${cityTime.format("A")}</small></div>
-        </div>
-        <div class="back-to-home" id="back-to-home">
-            <a href="#" id="return-link">Return</a>
         </div>`;
-    document.getElementById("back-to-home").style.display = "block";
-    document
-      .getElementById("return-link")
-      .addEventListener("click", (event) => {
-        event.preventDefault();
-        displayMainCities();
-      });
+    document.getElementById("back-to-home").style.display = "block"; // Vis knappen når en by er valgt
   }
 
   document.getElementById("city").addEventListener("change", (event) => {
@@ -81,6 +73,13 @@ document.addEventListener("DOMContentLoaded", function () {
       updateCity(event);
     }
   });
+
+  document
+    .getElementById("return-button")
+    .addEventListener("click", (event) => {
+      event.preventDefault();
+      displayMainCities();
+    });
 
   function initCurrentLocation() {
     const cityTimeZone = moment.tz.guess();
