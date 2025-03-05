@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const cities = [
-    { id: "los-angeles", timezone: "America/Los_Angeles" },
-    { id: "paris", timezone: "Europe/Paris" },
-    { id: "tokyo", timezone: "Asia/Tokyo" },
+    { id: "los-angeles", name: "Los Angeles", timezone: "America/Los_Angeles" },
+    { id: "paris", name: "Paris", timezone: "Europe/Paris" },
+    { id: "tokyo", name: "Tokyo", timezone: "Asia/Tokyo" },
   ];
 
   function updateCityTime(city) {
@@ -21,6 +21,24 @@ document.addEventListener("DOMContentLoaded", function () {
     cities.forEach(updateCityTime);
   }
 
+  function displayMainCities() {
+    const citiesElement = document.querySelector("#cities");
+    citiesElement.innerHTML = cities
+      .map(
+        (city) => `
+      <div class="city" id="${city.id}">
+        <div>
+          <h2>${city.name}</h2>
+          <div class="date"></div>
+        </div>
+        <div class="time"></div>
+      </div>
+    `
+      )
+      .join("");
+    updateAllCitiesTime();
+  }
+
   function updateCity(event) {
     let cityTimeZone = event.target.value;
     if (cityTimeZone === "current") {
@@ -34,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function displayCityTime(cityTimeZone, cityName) {
     let cityTime = moment.tz(cityTimeZone);
-    let citiesElement = document.querySelector("#cities");
+    const citiesElement = document.querySelector("#cities");
     citiesElement.innerHTML = `<div class="city">
             <div>
                 <h2>${cityName}</h2>
@@ -52,40 +70,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementById("return-link")
       .addEventListener("click", (event) => {
         event.preventDefault();
-        resetToMainCities();
+        displayMainCities();
       });
-  }
-
-  function resetToMainCities() {
-    document.getElementById("back-to-home").style.display = "none";
-    document.querySelector("#cities").innerHTML = `
-      <div class="city" id="los-angeles">
-        <div>
-          <h2>Los Angeles</h2>
-          <div class="date"></div>
-        </div>
-        <div class="time"></div>
-      </div>
-      <div class="city" id="paris">
-        <div>
-          <h2>Paris</h2>
-          <div class="date"></div>
-        </div>
-        <div class="time"></div>
-      </div>
-      <div class="city" id="tokyo">
-        <div>
-          <h2>Tokyo</h2>
-          <div class="date"></div>
-        </div>
-        <div class="time"></div>
-      </div>`;
-    updateAllCitiesTime();
   }
 
   document.getElementById("city").addEventListener("change", (event) => {
     if (event.target.value === "") {
-      resetToMainCities();
+      displayMainCities();
     } else {
       updateCity(event);
     }
@@ -107,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   displayUserTime();
-  resetToMainCities();
-  initCurrentLocation();
+  displayMainCities();
   setInterval(updateAllCitiesTime, 1000);
 });
